@@ -1,0 +1,57 @@
+{
+	"folders": {},
+	"connections": {
+		"mysql8-17c791e2973-2df45eb6444d784a": {
+			"provider": "mysql",
+			"driver": "mysql8",
+			"name": "BBS",
+			"save-password": true,
+			"show-system-objects": true,
+			"read-only": false,
+			"configuration": {
+				"host": "localhost",
+				"port": "3306",
+				"database": "BBS",
+				"url": "jdbc:mysql://localhost:3306/BBS",
+				"home": "C:\\Program Files\\MySQL\\MySQL Server 8.0",
+				"type": "dev",
+				"provider-properties": {
+					"@dbeaver-serverTimezone@": "Asia/Seoul"
+				},
+				"auth-model": "native",
+				"handlers": {}
+			}
+		},
+		"mysql8-17c7923fe8f-34e56b31d387a873": {
+			"provider": "mysql",
+			"driver": "mysql8",
+			"name": "BBS 2",
+			"save-password": true,
+			"show-system-objects": true,
+			"read-only": false,
+			"configuration": {
+				"host": "localhost",
+				"port": "3306",
+				"database": "BBS",
+				"url": "jdbc:mysql://localhost:3306/BBS",
+				"home": "C:\\Program Files\\MySQL\\MySQL Server 8.0",
+				"type": "dev",
+				"provider-properties": {
+					"@dbeaver-serverTimezone@": "Asia/Seoul"
+				},
+				"auth-model": "native",
+				"handlers": {}
+			}
+		}
+	},
+	"connection-types": {
+		"dev": {
+			"name": "Development",
+			"color": "255,255,255",
+			"description": "Regular development database",
+			"auto-commit": true,
+			"confirm-execute": false,
+			"confirm-data-change": false
+		}
+	}
+}
