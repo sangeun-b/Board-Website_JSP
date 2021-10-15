@@ -1,0 +1,9 @@
+@charset "UTF-8";
+@import url(http://fonts.gooleapis.com/css?family=Nanum+gothic);
+@import url(http://fonts.gooleapis.com/css?family=Hanna);
+*{
+	font-family: 'Nanum Gothic';
+}
+h1{
+	font-family: 'Hanna';
+}

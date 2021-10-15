@@ -16,7 +16,7 @@ public class BoardDAO {
             String dbURL = "jdbc:mysql://localhost:3306/BBS";
             String dbID="root";
             String dbPassword="root";
-            Class.forName("com.mysql.cj.jdbc.Driver");
+            Class.forName("com.mysql.jdbc.Driver");
             conn = DriverManager.getConnection(dbURL, dbID, dbPassword);
         }catch(Exception e) {
             e.printStackTrace();
@@ -108,5 +108,55 @@ public class BoardDAO {
             e.printStackTrace();
         }
         return false;
+    }
+    // retrive a posting
+    public Board getBoard(int boardID) {
+        String sql = "SELECT * FROM BOARD WHERE boardID = ?"; 
+        try {
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, boardID);
+            rs = pstmt.executeQuery();
+            if(rs.next()) {
+                Board board = new Board();
+                board.setBoardID(rs.getInt(1));
+                board.setBoardTitle(rs.getString(2));
+                board.setUserID(rs.getString(3));
+                board.setBoardDate(rs.getString(4));
+                board.setBoardContent(rs.getString(5));
+                board.setBoardAvailable(rs.getInt(6));
+                return board;
+            }
+            
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+        
+    }
+    public int update(int boardID, String boardTitle, String boardContent) {
+        String sql = "UPDATE BOARD SET boardTitle = ?, boardContent = ? WHERE boardID = ?"; 
+        try {
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, boardTitle);
+            pstmt.setString(2, boardContent);
+            pstmt.setInt(3, boardID);
+            return pstmt.executeUpdate();//if success return over 0
+            
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
+        return-1; //db issue
+    }
+    public int delete(int boardID) {
+        String sql = "UPDATE BOARD SET boardAvailable = 0 WHERE boardID = ?"; 
+        try {
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, boardID);
+            return pstmt.executeUpdate();//if success return over 0
+            
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
+        return-1; //db issue
     }
 }
