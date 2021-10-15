@@ -1,22 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page import="java.io.PrintWriter" %>
-<%@ page import="board.BoardDAO" %>
 <%@ page import="board.Board" %>
-<%@ page import="java.util.ArrayList" %>
+<%@ page import="board.BoardDAO" %>
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
+<meta charset="UTF-8" http-equiv="Content-Type" content="text/html;">
 <meta name="viewport" content="width=device-width", initial-scale="1">
 <link rel="stylesheet" href="css/bootstrap.css">
 <title>JSP WEBSITE</title>
-<style type="text/css">
-a, a:hover{
-    color: #000000;
-    text-decoration:none;
-    }
-</style>
 </head>
 <body>
 <%
@@ -24,10 +17,24 @@ a, a:hover{
    if(session.getAttribute("userID") != null){
       userID = (String) session.getAttribute("userID");
   }
-   int pageNumber=1;
-   if(request.getParameter("pageNumber") != null){
-       pageNumber = Integer.parseInt(request.getParameter("pageNumber"));
+   int boardID = 0;
+   if(request.getParameter("boardID")!=null){
+       boardID = Integer.parseInt(request.getParameter("boardID"));
    }
+   if(boardID == 0) {
+       PrintWriter script = response.getWriter();
+       script.println("<script>");
+       script.println("alert('This posting is not available')");
+       script.println("location.href = 'board.jsp'");
+       script.println("</script>");
+      }
+  /*  Board board = null;
+   BoardDAO boardDao = new BoardDAO(); 
+   
+   if(boardDao != null){
+       board = boardDao.getBoard(boardID);
+   } */
+   Board board = new BoardDAO().getBoard(boardID);
 %>
 <nav class="navbar navbar-default">
 <div class="navbar-header">
@@ -70,54 +77,57 @@ My Account<span class="caret"></span></a>
 </ul>
 </li>
 </ul>
-<% 
-   }
-%>
+<% } %>
 </div>
 </nav>
+<% if(board != null){ %> 
 <div class="container">
 <div class="row">
 <table class="table table-striped" style="text-align: center; border: 1px solid #dddddd">
 <thead>
   <tr>
-  <th style="background-color: #eeeeee; text-align: center;">No</th>
-  <th style="background-color: #eeeeee; text-align: center;">Title</th>
-  <th style="background-color: #eeeeee; text-align: center;">Author</th>
-  <th style="background-color: #eeeeee; text-align: center;">Date</th> 
+  <th colspan="3" style="background-color: #eeeeee; text-align: center;">Posting</th>
   </tr>
 </thead>
 <tbody>
-<%
-   BoardDAO boardDAO = new BoardDAO();
-   ArrayList<Board> list = boardDAO.getList(pageNumber);
-   for(int i=0; i<list.size(); i++){
-       %>
-     <tr>
-<td><%= list.get(i).getBoardID() %></td>
-<td><a href="view.jsp?boardID=<%=list.get(i).getBoardID()%>"><%=list.get(i).getBoardTitle().replaceAll(" ","&nbsp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll("\n","<br>") %></a></td>
-<td><%= list.get(i).getUserID() %></td>
-<td><%= list.get(i).getBoardDate().substring(0,11) + list.get(i).getBoardDate().substring(11,13)+":"+list.get(i).getBoardDate().substring(14,16) %></td>
+<tr>
+<td style="width: 20%;">Title</td>
+<td colspan="2"><%= board.getBoardTitle().replaceAll(" ","&nbsp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll("\n","<br>") %> </td>
+</tr>
+<tr>
+<td>Author</td>
+<td colspan="2"><%= board.getUserID() %></td>
+</tr>
+<tr>
+<td>Date</td>
+<td colspan="2"><%= board.getBoardDate().substring(0,11)+board.getBoardDate().substring(11,13)+":"+board.getBoardDate().substring(14,16) %></td>
+</tr>
+<tr>
+<td>Content</td>
+<td colspan="2" style="min-height: 200px; text-align: left;">
 
-</tr>  
-<%
-}
-%>
-
+<% if(board.getBoardDate() != null){ %>
+<%= board.getBoardContent().replaceAll(" ","&nbsp;").replaceAll("<","lt;").replaceAll(">","&gt;").replaceAll("\n","<br>") %></td>
+<% } %>
+</tr>
 </tbody>
 </table>
-<% 
-   if(pageNumber!=1){
-       %>
-       <a href="board.jsp?pageNumber=<%=pageNumber-1 %>" class="btn btn-success btn-arraw-left">Previous</a>
+<a href="board.jsp" class="btn btn-primary"> List </a>
 <%
-   } if(boardDAO.nextPage(pageNumber+1)){
+   if(userID != null && userID.equals(board.getUserID())){
 %>
-       <a href="board.jsp?pageNumber=<%=pageNumber+1 %>" class="btn btn-success btn-arraw-left">Next</a>
-   <% }
+
+<a href="edit.jsp?boardID=<%= boardID %>" class="btn btn-primary"> Edit </a>
+<a onclick="return confirm('Are you sure you want to delete this posting?')" href="deleteAction.jsp?boardID=<%= boardID %>" class="btn btn-primary"> Delete </a>
+
+
+<%
+   }
 %>
-<a href="post.jsp" class="btn btn-primary pull-right">POST</a>
+
 </div>
 </div>
+<% } %>
 <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 <script src="js/bootstrap.js"></script>
 </body>
